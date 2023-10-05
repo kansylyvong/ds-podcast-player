@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { IPodcast } from "./podcast";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Observable, catchError, of, switchMap, tap, throwError } from "rxjs";
 
 
@@ -11,8 +11,12 @@ export class PodcastService
 {
   private podcastUrl = 'api/podcasts/podcasts.json';
   private rssFeed = 'api/podcasts/dreaming_spanish.rss';
-
-  podcasts$ = this.http.get(this.rssFeed, { responseType: "text" }).pipe(
+  headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+  requestOptions: Object = {
+    /* other options here */
+    responseType: 'text'
+  }
+  podcasts$ = this.http.get<IPodcast[]>(this.rssFeed, this.requestOptions).pipe(
     switchMap( xml =>  this.parseXmlToJson(xml)),
     catchError (err => {
       console.error(err)
