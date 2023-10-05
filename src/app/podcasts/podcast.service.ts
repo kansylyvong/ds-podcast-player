@@ -9,7 +9,6 @@ import { Observable, catchError, of, switchMap, tap, throwError } from "rxjs";
 })
 export class PodcastService
 {
-  private podcastUrl = 'api/podcasts/podcasts.json';
   private rssFeed = 'api/podcasts/dreaming_spanish.rss';
   headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
   requestOptions: Object = {
@@ -25,22 +24,6 @@ export class PodcastService
   )
   constructor(private http: HttpClient) {
 
-  }
-  getPodcasts(): Observable<IPodcast[]> {
-    return this.http.get<IPodcast[]>(this.podcastUrl).pipe(
-      tap(data => console.log('All: ', JSON.stringify(data))),
-      catchError(this.handleError)
-    )
-  }
-
-  getRSSFeed() : Observable<any> {
-    return this.http.get(this.rssFeed, { responseType: "text" }).pipe(
-      switchMap( xml =>  this.parseXmlToJson(xml)),
-      catchError (err => {
-        console.error(err)
-        throw new Error("Could not retrieve podcasts")
-      })
-    )
   }
 
    parseXmlToJson(xml: any) : Observable<IPodcast[]> {
