@@ -1,0 +1,61 @@
+<div class="container">
+  <mat-toolbar color="primary" class="main-toolbar">
+    <span>Audio Player</span>
+  </mat-toolbar>
+  <div class="content">
+      <div class="logo">
+        <mat-icon>music_note</mat-icon>
+        <div>Audio Player</div>
+    </div>
+    <mat-form-field *ngIf="hosts$ | async as hosts">
+      <mat-label>Filter By Host</mat-label>
+      <mat-select [(ngModel)]='listFilter'>
+        <mat-option *ngFor="let host of hosts" [value]="host" >
+          {{host}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+   <!-- <div class='row'>
+      <div class='col-md-2'>Filter by:</div>
+      <div class='col-md-4'>
+        <input type='text'
+               [(ngModel)]='listFilter' />
+      </div>
+    </div>-->
+    <mat-list color="primary" *ngIf="filteredPodcasts$ | async as filteredPodcasts">
+      <h3 mat-subheader>Podcasts</h3>
+      <mat-list-item *ngFor="let podcast of filteredPodcasts; let i = index" (click)="openFile(podcast, i)">
+        <mat-icon color="primary" matListItemIcon>music_note</mat-icon>
+        <div matListItemTitle>{{ podcast.title }}</div>
+        <div matListItemLine>desc: {{ podcast.description }}</div  >
+        <div matListItemLine>by {{ podcast.host }}</div  >
+        <mat-icon color="primary" *ngIf="currentPodcast.index === i && !state?.error">volume_up</mat-icon>
+        <h6 *ngIf="currentPodcast.index === i && state?.error">ERROR</h6>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div class="media-footer">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+         {{ state?.readableCurrentTime }}
+       <!---  <mat-slider class="time-slider" min="0" [max]="state?.duration" step="1" [value]="state?.currentTime" (input)="onSliderChangeEnd($event)" [disabled]="state?.error || currentFile.index === undefined"></mat-slider>
+         {{ state?.readableDuration }} -->
+      </mat-toolbar-row>
+      <mat-toolbar-row class="media-action-bar">
+        <button mat-button [disabled]="isFirstPlaying()" (click)="previous()">
+          <mat-icon mat-list-icon>skip_previous</mat-icon>
+        </button>
+        <button mat-button (click)="play()" [disabled]="state?.error" *ngIf="!state?.playing">
+          <mat-icon mat-list-icon>play_circle_filled</mat-icon>
+        </button>
+        <button mat-button (click)="pause()" *ngIf="state?.playing">
+          <mat-icon mat-list-icon>pause</mat-icon>
+        </button>
+        <button  mat-button [disabled]="isLastPlaying()" (click)="next()">
+          <mat-icon mat-list-icon>skip_next</mat-icon>
+        </button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </div>
+</div>
