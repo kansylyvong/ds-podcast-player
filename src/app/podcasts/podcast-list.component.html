@@ -15,13 +15,14 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-   <!-- <div class='row'>
-      <div class='col-md-2'>Filter by:</div>
-      <div class='col-md-4'>
-        <input type='text'
-               [(ngModel)]='listFilter' />
-      </div>
-    </div>-->
+    <mat-form-field *ngIf=" levels$  | async as levels">
+      <mat-label>Filter By Level</mat-label>
+      <mat-select (selectionChange)="onSelected($event)">
+        <mat-option *ngFor="let level of levels" [value]="level" >
+          {{level}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-list color="primary" *ngIf="filteredPodcasts$ | async as filteredPodcasts">
       <h3 mat-subheader>Podcasts</h3>
       <mat-list-item *ngFor="let podcast of filteredPodcasts; let i = index" (click)="openFile(podcast, i)">

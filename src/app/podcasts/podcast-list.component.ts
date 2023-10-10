@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { IPodcast } from "./podcast";
 import { PodcastService } from "./podcast.service";
-import { EMPTY, Observable, Subscription, catchError, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, tap, toArray } from "rxjs";
+import { EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, tap, toArray } from "rxjs";
+import { MatSelectChange } from "@angular/material/select";
 
 
 @Component({
@@ -13,6 +14,11 @@ export class PodcastListComponent implements OnInit, OnDestroy {
 
   constructor(private podcastService: PodcastService) {
   }
+
+  levels$ = of(['Superbeginner','Beginner','Intermediate','Advanced']);
+
+  private levelSelectedSubject = new Subject<string>();
+  levelSelectedAction$ = this.levelSelectedSubject.asObservable();
   pageTitle: string = 'Podcasts List';
   showDescription: boolean = false;
   podcasts$: Observable<IPodcast[]> = this.podcastService.podcasts$.pipe(
@@ -21,7 +27,21 @@ export class PodcastListComponent implements OnInit, OnDestroy {
       return EMPTY
     })
   );
-  filteredPodcasts$ = this.podcasts$;
+  filteredPodcasts$ = combineLatest([
+    this.podcasts$,
+    this.levelSelectedAction$
+  ]).pipe(
+    tap(levelSelectedAction => console.log(levelSelectedAction)),
+    map(([podcasts, selectedLevel]) =>
+      podcasts.filter((podcast) =>
+        podcast.title.includes(selectedLevel))
+    ),
+    catchError( err => {
+      this.errorMessage = err;
+      return EMPTY;
+    })
+  )
+  //this.podcasts$;
   hosts$ = this.podcasts$.pipe(
     mergeAll(),
     distinct(v => v.host),
@@ -55,12 +75,16 @@ export class PodcastListComponent implements OnInit, OnDestroy {
   }
   performFilter(filterBy: string): Observable<IPodcast[]> {
     filterBy = filterBy.toLowerCase();
-  /*  return this.podcasts$.filter((podcast: IPodcast) =>
-    podcast.description.toLowerCase().includes(filterBy))*/
     return this.podcasts$.pipe(
       map(ep => ep.filter((podcast: IPodcast) =>
       podcast.description.toLowerCase().includes(filterBy))
     ))
+  }
+
+  onSelected(level: MatSelectChange) {
+    console.log(level);
+    this.levelSelectedSubject.next(level.value);
+
   }
   openFile(podcast : IPodcast, index: number) : void {
     this.currentPodcast = { index, podcast };
@@ -86,9 +110,6 @@ export class PodcastListComponent implements OnInit, OnDestroy {
 
   next() {
 
-  }
-  onRatingClicked(message: string): void {
-    this.pageTitle = 'Product List: ' + message;
   }
 
 }
