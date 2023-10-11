@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { IPodcast } from "./podcast";
 import { PodcastService } from "./podcast.service";
-import { EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, tap, toArray } from "rxjs";
+import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, tap, toArray } from "rxjs";
 import { MatSelectChange } from "@angular/material/select";
 
 
@@ -15,9 +15,9 @@ export class PodcastListComponent implements OnInit, OnDestroy {
   constructor(private podcastService: PodcastService) {
   }
 
-  levels$ = of(['Superbeginner','Beginner','Intermediate','Advanced']);
+  levels$ = of(['All','Superbeginner','Beginner','Intermediate','Advanced']);
 
-  private levelSelectedSubject = new Subject<string>();
+  private levelSelectedSubject = new BehaviorSubject<string>('All');
   levelSelectedAction$ = this.levelSelectedSubject.asObservable();
   pageTitle: string = 'Podcasts List';
   showDescription: boolean = false;
@@ -34,7 +34,7 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     tap(levelSelectedAction => console.log(levelSelectedAction)),
     map(([podcasts, selectedLevel]) =>
       podcasts.filter((podcast) =>
-        podcast.title.includes(selectedLevel))
+      selectedLevel == 'All' ? true : podcast.title.includes(selectedLevel))
     ),
     catchError( err => {
       this.errorMessage = err;
