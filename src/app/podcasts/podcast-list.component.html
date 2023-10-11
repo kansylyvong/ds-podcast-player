@@ -9,7 +9,7 @@
     </div>
     <mat-form-field *ngIf="hosts$ | async as hosts">
       <mat-label>Filter By Host</mat-label>
-      <mat-select [(ngModel)]='listFilter'>
+      <mat-select (selectionChange)="onSelectedHost($event)">
         <mat-option *ngFor="let host of hosts" [value]="host" >
           {{host}}
         </mat-option>
@@ -17,7 +17,7 @@
     </mat-form-field>
     <mat-form-field *ngIf=" levels$  | async as levels">
       <mat-label>Filter By Level</mat-label>
-      <mat-select (selectionChange)="onSelected($event)">
+      <mat-select (selectionChange)="onSelectedLevel($event)">
         <mat-option *ngFor="let level of levels" [value]="level" >
           {{level}}
         </mat-option>
