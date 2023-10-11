@@ -3,7 +3,8 @@ import { IPodcast } from "./podcast";
 import { PodcastService } from "./podcast.service";
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, tap, toArray } from "rxjs";
 import { MatSelectChange } from "@angular/material/select";
-
+import { AudioService } from "./audio.service";
+import { StreamState } from "./streamState";
 
 @Component({
   templateUrl: './podcast-list.component.html',
@@ -12,13 +13,20 @@ import { MatSelectChange } from "@angular/material/select";
 export class PodcastListComponent implements OnInit, OnDestroy {
 
 
-  constructor(private podcastService: PodcastService) {
+  constructor(private podcastService: PodcastService,
+             private audioService: AudioService) {
+
+              this.audioService.getState().subscribe(state => {
+                this.state = state;
+              });
   }
 
   levels$ = of(['All','Superbeginner','Beginner','Intermediate','Advanced']);
 
   hosts$ = of(['All','Abraham','Adam','Adrià','Agustina','Aitana','Alan','Alexandra','Alfonso','Alfredo','Alma','Amey','Analía','Andrea','Andrés H','Bernardo','Betsy','Betsy C','Bianncka','Camilo','Carolina','César','Claudia','David & Adrián','Débora','Edgar','Edwin','Elías','Enrique','Fátima','How to Spanish','Ian','Isabel','Iván','Javier','Jose María','Jostin','Juan','Judit','Karlos','Laura','Lorena','Lorena O','Marce','María','María del Mar','Marifer','Marinés','Mariona','Mauricio','Maximiliano','Michelle','Montserrat','Nacho','Natalia','Núria','Pablo','Pablo\'s mom','Pati','Pilar','Rafael','Ramón','Ricardo','Ricardo R','Rocío','Sandra','Sergio','Sofía','Sonia & Alberto','Tamara','Tere','Tomás','Toni','Valeria','Victoria'])
 
+  state: StreamState | undefined;
+  currentPodcast: any = {};
 
   private levelSelectedSubject = new BehaviorSubject<string>('All');
 
@@ -54,12 +62,10 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     })
   )
 
-  currentPodcast: any = {};
   private _listFilter = '';
   errorMessage = '';
   sub!: Subscription;
   rss!: Subscription;
-  state: any;
   get listFilter(): string {
     return  this._listFilter
   }
@@ -97,9 +103,17 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     this.levelSelectedHostSubject.next(level.value);
 
   }
-  openFile(podcast : IPodcast, index: number) : void {
-    this.currentPodcast = { index, podcast };
+  openFile(podcast : IPodcast) : void {
+    this.currentPodcast = {  podcast };
+    this.audioService.stop();
+    this.playStream(podcast.enclosure);
     console.log('opened');
+  }
+
+  playStream(url: string) {
+    this.audioService.playStream(url).subscribe(events => {
+      // listening for fun here
+    });
   }
   isFirstPlaying() {
     return false;
@@ -109,10 +123,15 @@ export class PodcastListComponent implements OnInit, OnDestroy {
   }
 
   pause() {
+    this.audioService.pause();
 
   }
   play() {
+    this.audioService.play();
 
+  }
+  stop() {
+    this.audioService.stop();
   }
 
   previous() {
