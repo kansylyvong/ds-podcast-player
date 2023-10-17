@@ -15,7 +15,7 @@
       margin: 2.5rem;
       text-align: center;
       font-size: 24px;
-      color: #3f51b5;
+      color: #0621b8;
       .mat-icon {
         height: 160px !important;
         width: 560px !important;
@@ -32,7 +32,10 @@
       width: 100% !important;
       margin-left: 20px;
       margin-right: 20px;
-
+      color: #0621b8;
+      --mdc-slider-handle-color: #0621b8;
+      --mdc-slider-active-track-color: white;
+      --mdc-slider-inactive-track-color: white;
     }
     .media-action-bar {
       width: 100%;
