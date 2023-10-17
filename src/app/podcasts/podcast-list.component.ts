@@ -5,7 +5,6 @@ import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, 
 import { MatSelectChange } from "@angular/material/select";
 import { AudioService } from "./audio.service";
 import { StreamState } from "./streamState";
-
 @Component({
   templateUrl: './podcast-list.component.html',
   styleUrls: ['./podcast-list.component.scss']
@@ -140,6 +139,10 @@ export class PodcastListComponent implements OnInit, OnDestroy {
 
   next() {
 
+  }
+
+  onSliderChangeEnd(change: any) {
+    this.audioService.seekTo(change.value);
   }
 
 }

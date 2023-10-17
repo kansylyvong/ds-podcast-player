@@ -30,6 +30,7 @@ export class AudioService {
     currentTime: undefined,
     canplay: false,
     error: false,
+    progress:  0
   };
 
   private resetState() {
@@ -40,7 +41,8 @@ export class AudioService {
       duration: undefined,
       currentTime: undefined,
       canplay: false,
-      error: false
+      error: false,
+      progress:  0
     };
   }
 
@@ -69,6 +71,7 @@ export class AudioService {
         this.state.readableCurrentTime = this.formatTime(
           this.state.currentTime
         );
+        this.state.progress = (this.state.currentTime / (this.state.duration || 1)) * 100;
         break;
       case "error":
         this.resetState();
