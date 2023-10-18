@@ -39,6 +39,9 @@
   <div class="media-footer">
     <mat-toolbar color="primary">
       <mat-toolbar-row>
+        {{ currentPodcastTitle }}
+      </mat-toolbar-row>
+      <mat-toolbar-row>
          {{ state?.readableCurrentTime }}
          <mat-slider class="time-slider" min="0" [max]="state?.duration" [step]="1"  (input)="onSliderChangeEnd($event)" [disabled]="false">
           <input matSliderThumb [(ngModel)]="state!.progress" #slider>

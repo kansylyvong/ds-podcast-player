@@ -62,6 +62,7 @@ export class AudioService {
         break;
       case "playing":
         this.state.playing = true;
+        console.log(event)
         break;
       case "pause":
         this.state.playing = false;

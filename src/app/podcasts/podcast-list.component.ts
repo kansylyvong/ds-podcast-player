@@ -34,6 +34,8 @@ export class PodcastListComponent implements OnInit, OnDestroy {
   levelSelectedHostAction$ = this.levelSelectedHostSubject.asObservable();
   levelSelectedAction$ = this.levelSelectedSubject.asObservable();
 
+  currentPodcastTitle: string = '';
+
   pageTitle: string = 'Podcasts List';
   showDescription: boolean = false;
   podcasts$: Observable<IPodcast[]> = this.podcastService.podcasts$.pipe(
@@ -106,6 +108,7 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     this.currentPodcast = {  podcast };
     this.audioService.stop();
     this.playStream(podcast.enclosure);
+    this.currentPodcastTitle = podcast.title
     console.log('opened');
   }
 
