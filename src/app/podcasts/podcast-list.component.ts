@@ -5,6 +5,9 @@ import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, 
 import { MatSelectChange } from "@angular/material/select";
 import { AudioService } from "./audio.service";
 import { StreamState } from "./streamState";
+import { Store, select } from '@ngrx/store';
+import { loadPodcasts } from '../store/podcasts.actions';
+import { selectAllPodcasts } from "../store/podcasts.reducer";
 @Component({
   templateUrl: './podcast-list.component.html',
   styleUrls: ['./podcast-list.component.scss']
@@ -12,7 +15,8 @@ import { StreamState } from "./streamState";
 export class PodcastListComponent implements OnInit, OnDestroy {
 
 
-  constructor(private podcastService: PodcastService,
+  constructor(private store: Store,
+              private podcastService: PodcastService,
              private audioService: AudioService) {
 
               this.audioService.getState().subscribe(state => {
@@ -38,12 +42,8 @@ export class PodcastListComponent implements OnInit, OnDestroy {
 
   pageTitle: string = 'Podcasts List';
   showDescription: boolean = false;
-  podcasts$: Observable<IPodcast[]> = this.podcastService.podcasts$.pipe(
-    catchError(err => {
-      this.errorMessage = err;
-      return EMPTY
-    })
-  );
+  podcasts$ = this.store.pipe(select(selectAllPodcasts));
+
   filteredPodcasts$ = combineLatest([
     this.podcasts$,
     this.levelSelectedAction$,
@@ -78,8 +78,8 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     this.filteredPodcasts$ = this.performFilter(value);
   }
 
-  ngOnInit(): void {
-
+  ngOnInit() {
+    this.store.dispatch(loadPodcasts());
   }
 
   ngOnDestroy(): void {
@@ -145,7 +145,8 @@ export class PodcastListComponent implements OnInit, OnDestroy {
   }
 
   onSliderChangeEnd(change: any) {
-    this.audioService.seekTo(change.value);
+    console.log(change)
+   this.audioService.seekTo(change);
   }
 
 }

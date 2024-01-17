@@ -134,6 +134,8 @@ export class AudioService {
 
   seekTo(seconds: number) {
     this.audioObj.currentTime = seconds;
+    this.state.progress = (seconds / (this?.state?.duration ?? seconds) * 100);
+    console.log(this.state.progress);
   }
 
   formatTime(time: number, format: string = "HH:mm:ss") {
