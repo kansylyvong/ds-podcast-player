@@ -6,8 +6,9 @@ import { MatSelectChange } from "@angular/material/select";
 import { AudioService } from "./audio.service";
 import { StreamState } from "./streamState";
 import { Store, select } from '@ngrx/store';
-import { loadPodcasts } from '../store/podcasts.actions';
-import { selectAllPodcasts } from "../store/podcasts.reducer";
+import { loadPodcasts, setHostFilter, setLevelFilter } from '../store/podcasts.actions';
+import { selectAllPodcasts, selectFilteredPodcasts, selectPodcastsState } from "../store/podcasts.reducer";
+import { AppState } from "../store/app.state";
 @Component({
   templateUrl: './podcast-list.component.html',
   styleUrls: ['./podcast-list.component.scss']
@@ -15,7 +16,7 @@ import { selectAllPodcasts } from "../store/podcasts.reducer";
 export class PodcastListComponent implements OnInit, OnDestroy {
 
 
-  constructor(private store: Store,
+  constructor(private store: Store<AppState>,
               private podcastService: PodcastService,
              private audioService: AudioService) {
 
@@ -30,79 +31,36 @@ export class PodcastListComponent implements OnInit, OnDestroy {
 
   state: StreamState | undefined;
   currentPodcast: any = {};
-
-  private levelSelectedSubject = new BehaviorSubject<string>('All');
-
-  private levelSelectedHostSubject = new BehaviorSubject<string>('All');
-
-  levelSelectedHostAction$ = this.levelSelectedHostSubject.asObservable();
-  levelSelectedAction$ = this.levelSelectedSubject.asObservable();
-
   currentPodcastTitle: string = '';
 
   pageTitle: string = 'Podcasts List';
   showDescription: boolean = false;
-  podcasts$ = this.store.pipe(select(selectAllPodcasts));
-
-  filteredPodcasts$ = combineLatest([
-    this.podcasts$,
-    this.levelSelectedAction$,
-    this.levelSelectedHostAction$
-  ]).pipe(
-    tap(levelSelectedAction => console.log(levelSelectedAction)),
-    map(([podcasts, selectedLevel, selectedHost]) =>
-      podcasts.filter((podcast) =>
-      selectedLevel == 'All' ? true : podcast.title.includes(selectedLevel))
-      .filter((podcast) =>
-      selectedHost == 'All' ? true : podcast.description.includes(selectedHost)
-      )
-    ),
-    catchError( err => {
-      this.errorMessage = err;
-      return EMPTY;
-    })
-  )
-
-  private _listFilter = '';
   errorMessage = '';
   sub!: Subscription;
   rss!: Subscription;
-  get listFilter(): string {
-    return  this._listFilter
-  }
+  podcasts$!: Observable<IPodcast[]>;
+  filteredPodcasts$!: Observable<IPodcast[]>;
 
-
-  set listFilter(value: string) {
-    this._listFilter = value;
-    console.log('In setter: ' + value);
-    this.filteredPodcasts$ = this.performFilter(value);
-  }
 
   ngOnInit() {
     this.store.dispatch(loadPodcasts());
+    this.podcasts$ = this.store.pipe(select(selectAllPodcasts));
+    this.filteredPodcasts$ = this.podcasts$
   }
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
-  performFilter(filterBy: string): Observable<IPodcast[]> {
-    filterBy = filterBy.toLowerCase();
-    return this.podcasts$.pipe(
-      map(ep => ep.filter((podcast: IPodcast) =>
-      podcast.description.toLowerCase().includes(filterBy))
-    ))
-  }
 
   onSelectedLevel(level: MatSelectChange) {
-    console.log(level);
-    this.levelSelectedSubject.next(level.value);
+    this.store.dispatch(setLevelFilter({ level: level.value }));
+    this.filteredPodcasts$ = this.store.pipe(select(selectFilteredPodcasts));
 
   }
 
   onSelectedHost(level: MatSelectChange) {
-    console.log(level);
-    this.levelSelectedHostSubject.next(level.value);
-
+    this.store.dispatch(setHostFilter({ host: level.value }));
+    this.filteredPodcasts$ = this.store.pipe(select(selectFilteredPodcasts));
   }
   openFile(podcast : IPodcast) : void {
     this.currentPodcast = {  podcast };

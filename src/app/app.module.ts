@@ -21,6 +21,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import { appReducer } from './store/podcasts.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { PodcastEffects } from './store/podcasts.effects';
 
 
 @NgModule({
@@ -52,6 +54,7 @@ import { appReducer } from './store/podcasts.reducer';
       { path: 'podcasts/:id', component: PodcastDetailComponent}
     ]),
     StoreModule.forRoot({podcasts: appReducer}),
+    EffectsModule.forRoot([PodcastEffects]),
     BrowserAnimationsModule
   ],
   exports: [  MatButtonModule,

@@ -16,3 +16,13 @@ export const loadPodcastsFailure = createAction(
   //add a payload of type string
   (errorMessage: string) => ({ payload: { errorMessage } })
 );
+
+export const setHostFilter = createAction(
+  '[Podcast List Component] Set Host Filter',
+  props<{ host: string }>()
+);
+
+export const setLevelFilter = createAction(
+  '[Podcast List Component] Set Level Filter',
+  props<{ level: string }>()
+);
