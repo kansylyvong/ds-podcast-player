@@ -67,7 +67,6 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     this.audioService.stop();
     this.playStream(podcast.enclosure);
     this.currentPodcastTitle = podcast.title
-    console.log('opened');
   }
 
   playStream(url: string) {

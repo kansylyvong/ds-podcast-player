@@ -62,7 +62,6 @@ export class AudioService {
         break;
       case "playing":
         this.state.playing = true;
-        console.log(event)
         break;
       case "pause":
         this.state.playing = false;
@@ -133,9 +132,15 @@ export class AudioService {
   }
 
   seekTo(seconds: number) {
-    this.audioObj.currentTime = seconds;
-    this.state.progress = (seconds / (this?.state?.duration ?? seconds) * 100);
-    console.log(this.state.progress);
+    if (this.state && this.state.duration) {
+      const pecentComplete = seconds / 100;
+      this.audioObj.currentTime = pecentComplete * this.state.duration;
+      this.state.progress = pecentComplete * 100; //(seconds / (this?.state?.duration ?? seconds) * 100);
+      console.log('seconds', seconds)
+      console.log('this.audioObj.currentTime', this.audioObj.currentTime)
+      console.log('this?.state?.duration', this?.state?.duration);
+      console.log('this.state.progress', this.state.progress);
+    }
   }
 
   formatTime(time: number, format: string = "HH:mm:ss") {
