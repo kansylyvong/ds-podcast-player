@@ -102,7 +102,6 @@ export class PodcastListComponent implements OnInit, OnDestroy {
   }
 
   onSliderChangeEnd(change: any) {
-    console.log(change)
    this.audioService.seekTo(change);
   }
 

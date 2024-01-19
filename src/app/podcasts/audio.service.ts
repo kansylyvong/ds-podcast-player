@@ -128,18 +128,15 @@ export class AudioService {
   }
 
   stop() {
-   // this.stop$.next();
+   this.audioObj.pause();
+   this.audioObj.currentTime = 0;
   }
 
   seekTo(seconds: number) {
     if (this.state && this.state.duration) {
       const pecentComplete = seconds / 100;
       this.audioObj.currentTime = pecentComplete * this.state.duration;
-      this.state.progress = pecentComplete * 100; //(seconds / (this?.state?.duration ?? seconds) * 100);
-      console.log('seconds', seconds)
-      console.log('this.audioObj.currentTime', this.audioObj.currentTime)
-      console.log('this?.state?.duration', this?.state?.duration);
-      console.log('this.state.progress', this.state.progress);
+      this.state.progress = pecentComplete * 100;
     }
   }
 
