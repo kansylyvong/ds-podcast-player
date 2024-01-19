@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { IPodcast } from "./podcast";
 import { PodcastService } from "./podcast.service";
-import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, tap, toArray } from "rxjs";
+import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, take, tap, toArray } from "rxjs";
 import { MatSelectChange } from "@angular/material/select";
 import { AudioService } from "./audio.service";
 import { StreamState } from "./streamState";
@@ -58,8 +58,8 @@ export class PodcastListComponent implements OnInit, OnDestroy {
 
   }
 
-  onSelectedHost(level: MatSelectChange) {
-    this.store.dispatch(setHostFilter({ host: level.value }));
+  onSelectedHost(host: MatSelectChange) {
+    this.store.dispatch(setHostFilter({ host: host.value }));
     this.filteredPodcasts$ = this.store.pipe(select(selectFilteredPodcasts));
   }
   openFile(podcast : IPodcast) : void {
@@ -78,7 +78,7 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     return false;
   }
   isLastPlaying() {
-    return true;
+    return false;
   }
 
   pause() {
@@ -98,7 +98,16 @@ export class PodcastListComponent implements OnInit, OnDestroy {
   }
 
   next() {
-
+    this.filteredPodcasts$.pipe(take(1)).subscribe(podcasts => {
+      const currentIndex = podcasts.findIndex(podcast => podcast.title === this.currentPodcastTitle);
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < podcasts.length) {
+        const nextPodcast = podcasts[nextIndex];
+        this.openFile(nextPodcast);
+      } else {
+        console.log('This is the last podcast.');
+      }
+    });
   }
 
   onSliderChangeEnd(change: any) {

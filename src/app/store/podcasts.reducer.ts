@@ -1,9 +1,11 @@
 import { createReducer, on, createFeatureSelector, createSelector } from '@ngrx/store';
 import { IPodcast } from '../podcasts/podcast';
-import { AppState } from './app.state';
+import { AppState, initialState as appStateInitial } from './app.state';
 import { loadPodcasts, loadPodcastsFailure, loadPodcastsSuccess, setHostFilter, setLevelFilter } from './podcasts.actions';
 
-export const initialState: IPodcast[] = [];
+export const initialState: AppState = {
+  ...appStateInitial
+};
 
 export const appReducer = createReducer(
   initialState,
@@ -14,17 +16,31 @@ export const appReducer = createReducer(
   }),
   on(loadPodcastsSuccess, (state, { podcasts }) => {
     console.log('Loading podcasts success');
-    return { ...state, podcasts, loading: false };
+    return { ...state, podcasts, filteredPodcasts: podcasts, loading: false };
   }),
   on(loadPodcastsFailure, (state, { payload }) => {
     return { ...state, error: payload.errorMessage, loading: false };
   }),
   on(setHostFilter, (state, { host }) => {
-    return { ...state, hostFilter: host };
+    return {
+      ...state,
+      hostFilter: host,
+      filteredPodcasts: state.podcasts.filter(podcast => {
+         return ( (!host || host === 'ALL') || podcast.host === host ) &&
+          ((state.levelFilter === '' || state.levelFilter === 'ALL') || podcast.level === state.levelFilter)
+        })
+    };
   }),
   on(setLevelFilter, (state, { level }) => {
-    return { ...state, levelFilter: level };
-  }),
+    return {
+      ...state,
+      levelFilter: level,
+      filteredPodcasts: state.podcasts.filter(podcast => {
+        return ( (!level || level === 'ALL') || podcast.level === level) &&
+        ((state.hostFilter === '' || state.hostFilter === 'ALL') || podcast.host === state.hostFilter)
+      })
+    };
+  })
 );
 
 // Select the entire state
@@ -45,13 +61,6 @@ export const selectLevelFilter = createSelector(
 );
 
 export const selectFilteredPodcasts = createSelector(
-  selectAllPodcasts,
-  selectHostFilter,
-  selectLevelFilter,
-  (podcasts, hostFilter, levelFilter) => {
-    return podcasts.filter(podcast => {
-      return ((!hostFilter || hostFilter === 'All') || podcast.host === hostFilter) &&
-             ((!levelFilter || levelFilter === 'All') || podcast.level === levelFilter);
-    });
-  }
+  selectPodcastsState,
+  (state: AppState) => state.filteredPodcasts
 );
