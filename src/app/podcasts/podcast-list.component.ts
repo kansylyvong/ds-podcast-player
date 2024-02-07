@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { IPodcast } from "./podcast";
 import { PodcastService } from "./podcast.service";
-import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, map, merge, mergeAll, mergeMap, of, reduce, take, tap, toArray } from "rxjs";
+import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, last, map, merge, mergeAll, mergeMap, of, reduce, take, tap, toArray } from "rxjs";
 import { MatSelectChange } from "@angular/material/select";
 import { AudioService } from "./audio.service";
 import { StreamState } from "./streamState";
@@ -75,10 +75,24 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     });
   }
   isFirstPlaying() {
-    return false;
+    this.filteredPodcasts$.pipe(take(1)).subscribe(podcasts => {
+      const currentIndex = podcasts.findIndex(podcast => podcast.title === this.currentPodcastTitle);
+      if (currentIndex === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
   isLastPlaying() {
-    return false;
+    this.filteredPodcasts$.pipe(last(),take(1)).subscribe(podcasts => {
+      const currentIndex = podcasts.findIndex(podcast => podcast.title === this.currentPodcastTitle);
+      if (currentIndex === podcasts.length - 1) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
 
   pause() {
