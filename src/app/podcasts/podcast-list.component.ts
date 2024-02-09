@@ -75,6 +75,7 @@ export class PodcastListComponent implements OnInit, OnDestroy {
     });
   }
   isFirstPlaying() {
+    return false;
     this.filteredPodcasts$.pipe(take(1)).subscribe(podcasts => {
       const currentIndex = podcasts.findIndex(podcast => podcast.title === this.currentPodcastTitle);
       if (currentIndex === 0) {
@@ -92,7 +93,8 @@ export class PodcastListComponent implements OnInit, OnDestroy {
       } else {
         return false;
       }
-    });
+    }); 
+    return false;
   }
 
   pause() {

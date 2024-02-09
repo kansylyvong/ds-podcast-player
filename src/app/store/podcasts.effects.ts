@@ -12,6 +12,7 @@ export class PodcastEffects {
       ofType(loadPodcasts),
       tap(() => console.log('loadPodcasts action triggered')),
       mergeMap(() => this.podcastService.podcasts$.pipe(
+
           map(podcasts => loadPodcastsSuccess({ podcasts })),
           catchError(error => of(loadPodcastsFailure(error.message)))
         )
