@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { IPodcast } from "./podcast";
-import { PodcastService } from "./podcast.service";
+import { PodcastService } from "../../services/podcast.service";
 import { BehaviorSubject, EMPTY, Observable, Subject, Subscription, catchError, combineLatest, distinct, filter, forkJoin, from, last, map, merge, mergeAll, mergeMap, of, reduce, take, tap, toArray } from "rxjs";
 import { MatSelectChange } from "@angular/material/select";
-import { AudioService } from "./audio.service";
+import { AudioService } from "../../services/audio.service";
 import { StreamState } from "./streamState";
 import { Store, select } from '@ngrx/store';
 import { loadPodcasts, setHostFilter, setLevelFilter } from '../store/podcasts.actions';
@@ -93,7 +93,7 @@ export class PodcastListComponent implements OnInit, OnDestroy {
       } else {
         return false;
       }
-    }); 
+    });
     return false;
   }
 

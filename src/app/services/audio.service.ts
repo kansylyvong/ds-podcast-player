@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, BehaviorSubject, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import * as moment from "moment";
-import { StreamState } from "./streamState";
+import { StreamState } from "../components/podcasts/streamState";
 
 @Injectable({
   providedIn: "root"

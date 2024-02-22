@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IPodcast } from "./podcast";
+import { IPodcast } from "../components/podcasts/podcast";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Observable, catchError, map, of, switchMap, tap, throwError } from "rxjs";
 import { XmlParser } from "@angular/compiler";
