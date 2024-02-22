@@ -6,9 +6,9 @@ import { MatSelectChange } from "@angular/material/select";
 import { AudioService } from "../../services/audio.service";
 import { StreamState } from "./streamState";
 import { Store, select } from '@ngrx/store';
-import { loadPodcasts, setHostFilter, setLevelFilter } from '../store/podcasts.actions';
-import { selectAllPodcasts, selectFilteredPodcasts, selectPodcastsState } from "../store/podcasts.reducer";
-import { AppState } from "../store/app.state";
+import { loadPodcasts, setHostFilter, setLevelFilter } from '../../store/podcasts.actions';
+import { selectAllPodcasts, selectFilteredPodcasts, selectPodcastsState } from "../../store/podcasts.reducer";
+import { AppState } from "../../store/app.state";
 @Component({
   templateUrl: './podcast-list.component.html',
   styleUrls: ['./podcast-list.component.scss']
