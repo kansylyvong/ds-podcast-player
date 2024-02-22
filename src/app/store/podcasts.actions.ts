@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IPodcast } from '../podcasts/podcast';
+import { IPodcast } from '../components/podcasts/podcast';
 
 export const loadPodcasts = createAction('[Podcast List Component] Load Podcasts');
 

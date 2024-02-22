@@ -1,4 +1,4 @@
-import { IPodcast } from "../podcasts/podcast";
+import { IPodcast } from "../components/podcasts/podcast";
 
 export interface AppState {
   podcasts: IPodcast[];

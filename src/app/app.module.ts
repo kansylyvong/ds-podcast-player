@@ -23,6 +23,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { appReducer } from './store/podcasts.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { PodcastEffects } from './store/podcasts.effects';
+import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { PodcastEffects } from './store/podcasts.effects';
     AppComponent,
     PodcastListComponent,
     StarComponent,
-    PodcastDetailComponent
+    PodcastDetailComponent,
+    LoginComponent
 
   ],
   imports: [
@@ -48,11 +50,7 @@ import { PodcastEffects } from './store/podcasts.effects';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    RouterModule.forRoot([
-      { path: '', component: PodcastListComponent},
-      {path: 'podcasts', component: PodcastListComponent},
-      { path: 'podcasts/:id', component: PodcastDetailComponent}
-    ]),
+    RouterModule,
     StoreModule.forRoot({podcasts: appReducer}),
     EffectsModule.forRoot([PodcastEffects]),
     BrowserAnimationsModule

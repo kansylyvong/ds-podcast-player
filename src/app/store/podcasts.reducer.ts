@@ -1,5 +1,5 @@
 import { createReducer, on, createFeatureSelector, createSelector } from '@ngrx/store';
-import { IPodcast } from '../podcasts/podcast';
+import { IPodcast } from '../components/podcasts/podcast';
 import { AppState, initialState as appStateInitial } from './app.state';
 import { loadPodcasts, loadPodcastsFailure, loadPodcastsSuccess, setHostFilter, setLevelFilter } from './podcasts.actions';
 
