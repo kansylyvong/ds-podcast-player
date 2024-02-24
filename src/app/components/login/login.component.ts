@@ -16,9 +16,10 @@ export class LoginComponent {
   onSubmit(): void {
     console.log('Form submitted')
     this.authService.login(this.username, this.password).subscribe(
-      response => {
+      (response: any) => {
         console.log('Login success:', response);
         if (response) {
+          localStorage.setItem('access_token', response);
           // Navigate to the home page
           this.router.navigate(['/podcasts']);
         } else {

@@ -12,6 +12,6 @@ export class AuthService {
   login(username: string, password: string) {
     const url = 'http://localhost:3000/login';
     const body = { username, password };
-    return this.http.post(url, body);
+    return this.http.post(url, body,{ responseType: 'text' });
   }
 }
