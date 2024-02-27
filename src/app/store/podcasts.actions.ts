@@ -26,3 +26,14 @@ export const setLevelFilter = createAction(
   '[Podcast List Component] Set Level Filter',
   props<{ level: string }>()
 );
+
+export const login = createAction(
+  '[Login Page] User Login',
+  props<{ username: string, password: string }>()
+);
+
+export const loginSuccess = createAction('[Login Page] Login Success');
+export const loginFailure = createAction(
+  '[Login Page] Login Failure',
+  props<{ errorMessage: string }>()
+);

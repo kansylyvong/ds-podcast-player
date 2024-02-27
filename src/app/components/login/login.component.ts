@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { Store, select } from '@ngrx/store';
+import { login } from '../../store/podcasts.actions';
+import { AppState } from 'src/app/store/app.state';
+import { selectLoggedIn } from 'src/app/store/podcasts.reducer';
 
 @Component({
   selector: 'app-login',
@@ -12,20 +16,18 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private store: Store<AppState>) { }
   onSubmit(): void {
     console.log('Form submitted')
-    this.authService.login(this.username, this.password).subscribe(
-      (response: any) => {
-        console.log('Login success:', response);
-        if (response) {
-          localStorage.setItem('access_token', response);
-          // Navigate to the home page
-          this.router.navigate(['/podcasts']);
-        } else {
-          // Show an error message
-        }
+    this.store.dispatch(login({ username: this.username, password: this.password }));
+    const loggedIn = this.store.pipe(select(selectLoggedIn));
+    loggedIn.subscribe((loggedIn) => {
+      if (loggedIn) {
+        this.router.navigate(['/podcasts']);
+      } else {
+        // Set error text
+
       }
-    );
+    });
   }
 }

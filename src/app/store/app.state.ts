@@ -5,6 +5,7 @@ export interface AppState {
   hostFilter: string;
   levelFilter: string;
   filteredPodcasts: IPodcast[];
+  loggedIn: boolean;
 }
 
 //create initialState with podcasts set to an empty array
@@ -12,5 +13,6 @@ export const initialState: AppState = {
   podcasts: [],
   hostFilter: "",
   levelFilter: "",
-  filteredPodcasts: []
+  filteredPodcasts: [],
+  loggedIn: false,
 };

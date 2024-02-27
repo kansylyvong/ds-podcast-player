@@ -1,7 +1,7 @@
 import { createReducer, on, createFeatureSelector, createSelector } from '@ngrx/store';
 import { IPodcast } from '../components/podcasts/podcast';
 import { AppState, initialState as appStateInitial } from './app.state';
-import { loadPodcasts, loadPodcastsFailure, loadPodcastsSuccess, setHostFilter, setLevelFilter } from './podcasts.actions';
+import { loadPodcasts, loadPodcastsFailure, loadPodcastsSuccess, setHostFilter, setLevelFilter, login, loginSuccess, loginFailure } from './podcasts.actions';
 
 export const initialState: AppState = {
   ...appStateInitial
@@ -40,7 +40,10 @@ export const appReducer = createReducer(
         ((state.hostFilter === '' || state.hostFilter === 'ALL') || podcast.host === state.hostFilter)
       })
     };
-  })
+  }),
+  on(login, (state) => ({ ...state, loggedIn: false })),
+  on(loginSuccess, (state) => ({ ...state, loggedIn: true })),
+  on(loginFailure, (state) => ({ ...state, loggedIn: false }))
 );
 
 // Select the entire state
@@ -63,4 +66,9 @@ export const selectLevelFilter = createSelector(
 export const selectFilteredPodcasts = createSelector(
   selectPodcastsState,
   (state: AppState) => state.filteredPodcasts
+);
+
+export const selectLoggedIn = createSelector(
+  selectPodcastsState,
+  (state: AppState) => state.loggedIn
 );
