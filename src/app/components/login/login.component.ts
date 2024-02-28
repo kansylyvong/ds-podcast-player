@@ -5,6 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { login } from '../../store/podcasts.actions';
 import { AppState } from 'src/app/store/app.state';
 import { selectLoggedIn } from 'src/app/store/podcasts.reducer';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
