@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { Store, select } from '@ngrx/store';
-import { login } from '../../store/podcasts.actions';
+import { login, loginFailure } from '../../store/podcasts.actions';
 import { AppState } from 'src/app/store/app.state';
-import { selectLoggedIn } from 'src/app/store/podcasts.reducer';
+import { selectError, selectLoggedIn } from 'src/app/store/podcasts.reducer';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
@@ -16,6 +16,7 @@ export class LoginComponent {
 
   username: string = '';
   password: string = '';
+  error$ = this.store.pipe(select(selectError));
 
   constructor(private authService: AuthService, private router: Router, private store: Store<AppState>) { }
   onSubmit(): void {

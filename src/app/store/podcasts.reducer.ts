@@ -42,8 +42,8 @@ export const appReducer = createReducer(
     };
   }),
   on(login, (state) => ({ ...state, loggedIn: false })),
-  on(loginSuccess, (state) => ({ ...state, loggedIn: true })),
-  on(loginFailure, (state) => ({ ...state, loggedIn: false }))
+  on(loginSuccess, (state) => ({ ...state, error: null, loggedIn: true })),
+  on(loginFailure, (state) => ({ ...state, error: "invalid username/password", loggedIn: false }))
 );
 
 // Select the entire state
@@ -71,4 +71,8 @@ export const selectFilteredPodcasts = createSelector(
 export const selectLoggedIn = createSelector(
   selectPodcastsState,
   (state: AppState) => state.loggedIn
+);
+export const selectError = createSelector(
+  selectPodcastsState,
+  (state: AppState) => state.error
 );
