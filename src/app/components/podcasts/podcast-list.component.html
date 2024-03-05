@@ -30,6 +30,7 @@
         <div matListItemTitle>{{ podcast.title }}</div>
         <div matListItemLine>desc: {{ podcast.description }}</div  >
         <div matListItemLine>by {{ podcast.host }}</div  >
+          <button (click)="markAsPlayed(podcast)">Mark as played</button>
         <mat-icon color="primary" *ngIf="currentPodcast.index === i && !state?.error">volume_up</mat-icon>
         <h6 *ngIf="currentPodcast.index === i && state?.error">ERROR</h6>
         <mat-divider></mat-divider>

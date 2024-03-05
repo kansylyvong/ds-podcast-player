@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { PodcastService } from '../services/podcast.service';
-import { loadPodcasts, loadPodcastsSuccess, loadPodcastsFailure, login, loginSuccess, loginFailure } from './podcasts.actions';
+import { loadPodcasts, loadPodcastsSuccess, loadPodcastsFailure, login, loginSuccess, loginFailure, markAsPlayed } from './podcasts.actions';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
@@ -33,6 +33,17 @@ export class PodcastEffects {
           }
         }),
         catchError(error => of(loginFailure({ errorMessage: error.message })))
+      ))
+    )
+  );
+  updatePodcast$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(markAsPlayed),
+      mergeMap(action => this.podcastService.updatePodcast(action.podcast).pipe(
+        map(podcast => {
+          return podcast;
+        }),
+        catchError(error => of(error))
       ))
     )
   );

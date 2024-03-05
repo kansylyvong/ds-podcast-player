@@ -9,4 +9,5 @@ export interface IPodcast {
   starRating: number;
   host: string;
   level: string;
+  played: boolean;
  }

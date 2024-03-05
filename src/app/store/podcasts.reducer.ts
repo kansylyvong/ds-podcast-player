@@ -1,7 +1,8 @@
 import { createReducer, on, createFeatureSelector, createSelector } from '@ngrx/store';
 import { IPodcast } from '../components/podcasts/podcast';
 import { AppState, initialState as appStateInitial } from './app.state';
-import { loadPodcasts, loadPodcastsFailure, loadPodcastsSuccess, setHostFilter, setLevelFilter, login, loginSuccess, loginFailure } from './podcasts.actions';
+import { loadPodcasts, loadPodcastsFailure, loadPodcastsSuccess, setHostFilter, setLevelFilter, login, loginSuccess, loginFailure, markAsPlayed } from './podcasts.actions';
+import { state } from '@angular/animations';
 
 export const initialState: AppState = {
   ...appStateInitial
@@ -43,7 +44,8 @@ export const appReducer = createReducer(
   }),
   on(login, (state) => ({ ...state, loggedIn: false })),
   on(loginSuccess, (state) => ({ ...state, error: null, loggedIn: true })),
-  on(loginFailure, (state) => ({ ...state, error: "invalid username/password", loggedIn: false }))
+  on(loginFailure, (state) => ({ ...state, error: "invalid username/password", loggedIn: false })),
+  on(markAsPlayed, (state, { podcast }) => ({ ...state, podcasts: state.podcasts.map(p => p.title === podcast.title ? { ...p, played: true } : p) }))
 );
 
 // Select the entire state

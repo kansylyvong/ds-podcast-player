@@ -11,7 +11,10 @@ import { XmlParser } from "@angular/compiler";
 export class PodcastService
 {
   private rssFeed = 'http://localhost:3000/podcasts';
+  private updatePodcastsUrl = 'http://localhost:3000/updatepodcast'
   headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+
+  jsonHeaders = new HttpHeaders().set('Content-Type', 'application/json');
   requestOptions: Object = {
     responseType: 'text'
   }
@@ -20,6 +23,14 @@ export class PodcastService
     tap(data => console.log('Podcasts: ', JSON.stringify(data))),
     catchError(this.handleError)
   )
+  updatePodcast(podcast: IPodcast): Observable<IPodcast> {
+    console.log(podcast);
+    return this.http.post<IPodcast>(this.updatePodcastsUrl, podcast, { headers: this.jsonHeaders }).pipe(
+      tap(data => console.log('updatePodcast: ' + JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+
+    }
   constructor(private http: HttpClient) {
 
   }

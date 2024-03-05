@@ -37,3 +37,8 @@ export const loginFailure = createAction(
   '[Login Page] Login Failure',
   props<{ errorMessage: string }>()
 );
+
+export const markAsPlayed = createAction(
+  '[Podcast List Component] Mark As Played',
+  props<{ podcast: IPodcast }>()
+);
